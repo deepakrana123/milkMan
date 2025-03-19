@@ -29,11 +29,11 @@ const QuantityForm = ({
           transition: "border-color 0.3s ease",
         }}
         placeholder="Enter quantity"
-        value={initialValue?.quantity}
+        value={initialValue?.milk_quantity}
         onChange={(event) =>
           setInitialValue((prev) => ({
             ...prev,
-            quantity: event.target.value,
+            milk_quantity: event.target.value,
           }))
         }
         onFocus={(e) => (e.target.style.borderColor = "#007bff")}

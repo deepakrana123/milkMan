@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./AppMain.css";
 import CommonModal from "../sharedComponent/CommonModal";
 import QuantityForm from "./QuantityForm";
+import axios from "axios";
 const playlist = [
   { src: "/audio1.mp3", title: "Song 1" },
   { src: "/audio2.mp3", title: "Song 2" },
@@ -11,9 +12,9 @@ const playlist = [
 const AppMain = () => {
   const [initialValue, setInitialValue] = useState({
     duration: 0,
-    start_time: 0,
-    end_time: 0,
-    quantity: 0,
+    start_time: null,
+    end_time: null,
+    milk_quantity: 0,
   });
   const [stage, setStage] = useState("start");
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
@@ -26,8 +27,6 @@ const AppMain = () => {
     setInitialValue((prev) => ({
       ...prev,
       start_time: now.toISOString(),
-      end_time: null,
-      duration: 0,
     }));
     setStage("stop");
     setInitialModalOpen(false);
@@ -37,11 +36,15 @@ const AppMain = () => {
     }, 1000);
   };
   const handleStop = () => {
+    const now = new Date();
     setIsPlaying(false);
     audioRef.current.pause();
     audioRef.current.currentTime = 0;
     clearInterval(milkManRef.current);
-    setInitialValue((prev) => ({ ...prev, duration: 0 }));
+    setInitialValue((prev) => ({
+      ...prev,
+      end_time: now.toISOString(),
+    }));
     setInitialModalOpen(true);
   };
   const handlePause = () => {
@@ -78,8 +81,13 @@ const AppMain = () => {
     setIsPlaying(true);
   };
 
-  const handleSubmission = () => {
+  const handleSubmission = async () => {
     setInitialModalOpen(false);
+    const response = await axios.post(
+      "http://localhost:4000/api/milkMan/create",
+      initialValue
+    );
+
     setStage("start");
   };
 
