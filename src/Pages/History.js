@@ -1,21 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../sharedComponent/Table";
 import { useNavigate } from "react-router-dom";
 import "./History.css";
+import axios from "axios";
 const History = () => {
-  const tableData = [
-    { id: 1, name: "John Doe", age: 28, city: "New York" },
-    { id: 2, name: "Jane Smith", age: 34, city: "Los Angeles" },
-    { id: 3, name: "Sam Green", age: 45, city: "Chicago" },
-  ];
+  const [initialState, setInitialState] = useState([]);
+  const fetchResponse = async () => {
+    const response = await axios.get(
+      "https://milkman.aryabhata.org/api/milkMan"
+    );
+    if (response.status === 200 && response.data) {
+      setInitialState(response.data);
+    }
+  };
   const navigate = useNavigate();
   const handleNavigate = () => {
     navigate(-1);
   };
+  useEffect(() => {
+    fetchResponse();
+  }, []);
 
   return (
     <div className="history-container">
-      <Table data={tableData} />
+      <Table data={initialState} />
       <button className="back_button" onClick={handleNavigate}>
         Back
       </button>

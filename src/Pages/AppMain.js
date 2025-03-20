@@ -84,10 +84,9 @@ const AppMain = () => {
   const handleSubmission = async () => {
     setInitialModalOpen(false);
     const response = await axios.post(
-      "http://localhost:4000/api/milkMan/create",
+      "https://milkman.aryabhata.org/api/milkMan/create",
       initialValue
     );
-
     setStage("start");
   };
 
